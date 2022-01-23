@@ -1,0 +1,332 @@
+# + ───────────────────────────────────────────────────────────────────────────────────────
+# ! GLOBAL PARAMS
+# + ───────────────────────────────────────────────────────────────────────────────────────
+ver='2022-01-23 14:47:51'
+# = ─────────────── for generating sine wave test data (b_wss_test.py) ────────────────────────────────────────────
+Fs  = 20000                     # *
+f   = 500                       # *
+# = ─────────────── for performance filer ────────────────────────────────────────────
+perf_bits           = 16      # *
+perf_filter         = 0      # * the bit size of the performance data
+perf_min_val = 0              # * min val of perf spec
+#perf_data = "data/perf_6_BTCUSDT_0m_32f.json"
+# = ─────────────── for b_wss filter options ────────────────────────────────────────────
+wss_filters = [0,2,4,8,16,32,64] # ! MUST start with 0, as that is the data that gets filtered]
+# = ─────────────── optimization/debugging ────────────────────────────────────────────────────────────────────────
+show_textbox        = true
+save                = true      # * to /tmp/ - save data to file on every transaction
+log2file            = true     # * special log files, for debugging, in ./logs
+log_mysql           = true     # * Turn off all GUI stuff... command line only - 40% faster
+display             = false      # * Turn off all GUI stuff... command line only - 40% faster
+headless            = true      # * Disable ALL GUI stuff, meant for headless only use
+logging             = 10        # * CRITICAL = 50 # * ERROR = 40, WARNING = 30, INFO = 20, DEBUG = 10, NOTSET = 0
+# = ─────────────── trigger params ───────────────────────────────────────────────────────────────────────
+dstot_relative      = true      # * select to use flat line limit, or a relative line based on the dstot avg of last N vals
+cooldown_mult       = 0         # * size of each countdown increment by g.long_buys
+dstot_buy           = 0.4       # * 40% - the starting limit of the dstot_lo limits
+dstot_Dadj          = 0.0       # * the % to adjust the dstot_lo (cyan) line indexed buy 'g.long_buys' value
+dstot_span          = 47        # * EMA span for cyan lower dstot_lo RELATIVE line
+#next_buy_increments = 0.00292   # ! size of drop for each long_buy until sell
+maxbuys             = 20        # * max g.subtot_qty
+
+# = ─────────────── data params ───────────────────────────────────────────────────────────────────────
+offline             = false      # *
+datatype            = 'backtest'      # * 'backtest', 'stream' or 'live' only
+testnet             = true     # * make sure this matches settings in keys.toml
+datalength          = 19800     # * NOT REALLY NECESSARY - for BACKTEST only - 2yr, 39999
+datawindow          = 288       # * 288 is 24 hrs @ 5min
+# = ─────────────── locations ─────────────────────────────────────────────────────────────────────────
+pair                            = "BTC/USDT"                # *  MUST use sep='/'
+datadir                         = "data"                    # *
+backtest_priceconversion_meta   = "0_BTCUSD_DATA.json"      # *
+backtest_priceconversion        = "0_BTCUSD.json"           # *
+secrets_file                    = ".secrets/keys.toml"      # * regrdless of this val, first looks in ~/.secrets/keys.toml
+statefile                       = "/tmp/state.json"         # * file to use when saving state to file
+# = ─────────────── trades ───────────────────────────────────────────────────────────────────────
+stoplimit           = 0.05      # * 5% limit - used if/when only buyiing/selling 1 asset at a time
+buy_fee             = 0.001     # * Binance fee
+sell_fee            = 0.001     # * Binance fee
+offline_price       = 60000     # * Currently not used - replaced with BTC 'bigdata' history
+convert_price       = false     # * Show base quote price in quote currency or covert to USD
+price_conversion    = "BTC/USD"
+# = ─────────────── GUI/matplotlib ───────────────────────────────────────────────────────────────────────
+2nd_screen          = false     # * show main graph on a 2nd screen
+verbose             = false     # ! not used - shows debug data to console
+interval            = 1.00      # * can't be 0 or the 'plt' non-blocking pause will loop forever
+figsize             = [18,10]   # * size of the GUI screen
+figsize2            = [18,1]    # * size of the 2nd GUI screen, if on
+allow_pause         = false     # *
+# = ─────────────── filter/plot params ────────────────────────────────────────────────────────────────────────
+ffmaps_lothresh     = -15       # * lo limits for the FFT chart - NOT USED?
+ffmaps_hithresh     = 15        # * hi limits for the FFT chart - NOT USED?
+bbDelta_lim         = 25        # * the delta between - something - NOT USED?
+sigffdeltahi_lim    = 5000      # *
+dstot_avg_span_by   = [2,5]     # *
+# + ───────────────────────────────────────────────────────────────────────────────────────
+# + >>> LIVE <<< SETTINGS
+# + ───────────────────────────────────────────────────────────────────────────────────────
+live.reserve_seed        = 1         # * how many actual assets (ETH, BTC, etc) we have allocated
+live.margin_x            = 1         # * the margin multiplier
+live.margin_int_pt       = 0.0002    # * Binance interest per day
+
+live.short_purch_qty     = 0.414     # * % of reserve_seed for short buys
+live.long_purch_qty      = 0.414     # * starting % of reserve_seed for long buys
+
+#live.lowerclose_pct      = 0.0024    # * Adjust lower the EMA of close by this %
+live.lowerclose_pct_bull = -0.001    # * % of the closing price for the green line when BULL market
+live.lowerclose_pct_bear = 0.004     # * % of the closing price for the green line when BEAR market
+
+live.load_on_boundary    = 300        # * 300 for 5min - used to % mod epoch
+live.boundary_load_delay = 15        # * secs to wait after boundary - 15 for production
+live.interval            = 300000    # * 300000 for 5min
+live.timeframe           = "5m"      # * check that the timeframe listed here is supported in the o.interval setter in v2.py
+live.since               = 24        # * hours - for LIVE only - tells how far back in history to get data
+
+live.next_buy_increments = 0.00292   # ! size of drop for each long_buy until sell
+live.testpair       = ["BUY_tvb3","SELL_tvb3"]  # *
+live.purch_mult     = 1.618                     # *
+# = ───────────────────────────────────────────────────────────────────────────────────────
+# + ───────────────────────────────────────────────────────────────────────────────────────
+# + >>> BACKTEST <<< SETTINGS
+# + ───────────────────────────────────────────────────────────────────────────────────────
+#backtestfile                 = "4_FILTERED_BTCUSDT.json"
+#backtestfile                 = "x_FILTERED_100_BTCUSDT.json"
+backtestfile                 = "BTCUSDT_5m.json"    # *
+#backtestfile                 = "_running_stream_filter_0_BTCUSDT.json"
+#backtestmeta                 = "4_FILTERED_BTCUSDT_DATA.json"
+
+#backtestfile    = "2_BTCUSDT.json"
+#backtestmeta    = "2_BTCUSDT_DATA.json"
+
+backtest.reserve_seed        = 1            # * how many actual assets (ETH, BTC, etc) we have allocated
+backtest.margin_x            = 100          # * the margin multiplier
+backtest.margin_int_pt       = 0.0002       # * Binance interest per day
+
+backtest.short_purch_qty = 0.001      # * % of reserve_seed for short buys
+backtest.long_purch_qty = 0.001      # * starting % of reserve_seed for long buys
+#backtest.short_purch_qty     = 0.414        # * % of reserve_seed for short buys
+#backtest.long_purch_qty      = 0.414        # * starting % of reserve_seed for long buys
+
+#backtest.lowerclose_pct      = 0.0024       # * Adjust lower the EMA of close by this %
+backtest.lowerclose_pct_bull = -0.001       # * % of the closing price for the green line when BULL market
+backtest.lowerclose_pct_bear = 0.004        # * % of the closing price for the green line when BEAR market
+
+backtest.timeframe           = "5m"         # * check that the timeframe listed here is supported in the o.interval setter in v2.py
+backtest.since               = 24           # * hours - for LIVE only - tells how far back in history to get data
+
+#pair            = "ETH/BTC"
+#backtestfile    = "2yr.json"
+#backtestmeta    = "2yr_DATA.json"
+
+
+#startdate       = "2021-01-01 00:00:00"
+#startdate       = "2021-05-14 16:00:00" # big dip
+startdate           = '2021-01-01 00:00:00'      # * big dip
+#startdate       = "2021-06-07 00:00:00" # big dip
+enddate             = '2022-01-01 00:00:00'      # * enddate use for debugging backtest only
+
+#startdate       = "2021-01-10 23:40:00" # big dip
+
+
+backtest.next_buy_increments = 0.00292   # ! size of drop for each long_buy until sell
+backtest.testpair   = ['BUY_perf','SELL_tvb3']      # *
+#backtest.testpair   = ["BUY_perf","SELL_tvb3"] # *
+backtest.purch_mult     = 1.618         # *
+
+# = ───────────────────────────────────────────────────────────────────────────────────────
+# + ───────────────────────────────────────────────────────────────────────────────────────
+# + >>> STREAM <<< SETTINGS
+# + ───────────────────────────────────────────────────────────────────────────────────────
+wss_data                   = "/tmp/_%pair%_%chart%_%filter%f.json"  # * file of wss streaming data (for 'stream' only)
+#wss_data                   = "/tmp/_stream_filter_0_%pair%.json"  # * file of wss streaming data (for 'stream' only)
+#wss_data                  = "/tmp/_stream_filter_%pair%.json"  # * file of wss streaming data (for 'stream' only)
+stream.reserve_seed        = 1         # ! how many actual assets (ETH, BTC, etc) we have allocated
+stream.margin_x            = 100         # ! the margin multiplier
+stream.margin_int_pt       = 0.0002     # ! Binance interest per day
+
+stream.short_purch_qty = 0.000414      # ! amount of unit (1) for short buys
+stream.long_purch_qty = 0.000414      # ! amount of unit (1) for long buys
+stream.since               = 24        # * not used, but here to make compatible with data objects
+stream.timeframe           = "0m"    # * needed for perf data
+#stream.lowerclose_pct      = 0.000 # * Adjust lower the EMA of close by this %
+stream.lowerclose_pct_bull = -0.0001 # ! true ratio (%/100) of the closing price for the green line when BULL market
+stream.lowerclose_pct_bear = 0.0001  # ! true ratio (%/100) of the closing price for the green line when BEAR market
+
+stream.next_buy_increments = 0.000618   # ! true ratio (%/100) - size of drop for each long_buy until sell
+#stream.next_buy_increments = 0.0009   # ! size of drop for each long_buy until sell
+                                      # * was 0.001, but that was a boundary that other bots used,
+                                      # * so always just missed a buy :(
+stream.testpair     = ['BUY_perf','SELL_tvb3']      # *
+#stream.testpair     = ["BUY_perf","SELL_tvb3"]
+stream.purch_mult     = 2.414                       # *
+time_filter_pct = 0.00000618 # * applied to (BTCUSDT) CLOSE * VOLUME in 'b_wss_filter.py'
+time_filter_amt = 1.00 # * applied to (BTCUSDT) CLOSE * VOLUME in 'b_wss_filter.py'
+
+# = ───────────────────────────────────────────────────────────────────────────────────────
+# ! ───────────────────────────────────────────────────────────────────────────────────────
+# ! >>> LIVETESTNET <<< OVERRIDES
+# ! ───────────────────────────────────────────────────────────────────────────────────────
+livetestnet.reserve_seed        = 1            # * how many actual assets (ETH, BTC, etc) we have allocated
+livetestnet.margin_x            = 1          # * the margin multiplier
+livetestnet.margin_int_pt       = 0.0000       # * Binance interest per day
+livetestnet.short_purch_qty     = 0.000414        # * % of reserve_seed for short buys
+livetestnet.long_purch_qty      = 0.000414        # * starting % of reserve_seed for long buys
+livetestnet.next_buy_increments = 0.00292   # ! size of drop for each long_buy until sell
+
+# = ───────────────────────────────────────────────────────────────────────────────────────
+[[mavs]] # * mav[0]
+    on      = false
+    length  = 20
+    color   = "green"
+    width   = 3
+    alpha   = 0
+    mavnum  = 0
+[[mavs]] # * mav[1]  - currently used for bull/bear indication
+    on      = true
+    live.length  = 40
+    backtest.length  = 40
+    stream.length  = 40
+    color   = "yellow"
+    width   = 1
+    alpha   = 0.3
+    mavnum  = 1
+    label   = "bull/bear line"
+[[mavs]] # * mav[2]
+    on      = false
+    length  = 60
+    color   = "red"
+    width   = 3
+    alpha   = 0
+    mavnum  = 2
+[[mavs]] # * mav[3]
+    on      = false
+    length  = 288
+    color   = "lime"
+    width   = 3
+    alpha   = 0.3
+    mavnum  = 3
+# = ───────────────────────────────────────────────────────────────────────────────────────
+# ! Currently not used - 6 element moving average array
+[[MAsn]] # * MAsn[0]
+    on      = false
+    span    = 8
+    color   = "white"
+    width   = 1
+    alpha   = 1
+[[MAsn]] # * MAsn[1]
+    on      = false
+    span    = 16
+    color   = "white"
+    width   = 1
+    alpha   = 1
+[[MAsn]] # * MAsn[2]
+    on      = false
+    span    = 32
+    color   = "white"
+    width   = 1
+    alpha   = 1
+[[MAsn]] # * MAsn[3]
+    on      = false
+    span    = 64
+    color   = "white"
+    width   = 1
+    alpha   = 1
+[[MAsn]] # * MAsn[4]
+    on      = false
+    span    = 128
+    color   = "white"
+    width   = 1
+    alpha   = 1
+[[MAsn]] # * MAsn[5]
+    on      = false
+    span    = 256
+    color   = "white"
+    width   = 1
+    alpha   = 1
+# = ───────────────────────────────────────────────────────────────────────────────────────
+[mbpfilter]
+    name    = "bandpass"
+    N       = 1
+#    Wn      = [ [0.001, 0.999] ]
+    Wn      = [ [0.001, 0.999 ] ]
+# =     Wn      = [ [0.01, 0.1],[0.1, 0.2],[0.2, 0.3],[0.3, 0.4],[0.4, 0.5],[0.5, 0.6] ]
+# =     Wn      = [ [0.01, 0.1],[0.1, 0.2],[0.2, 0.3],[0.3, 0.4],[0.4, 0.5],[0.5, 0.9999] ]
+# =     Wn      = [ [0.01, 0.999],[0.01, 0.999],[0.01, 0.999],[0.01, 0.999],[0.01, 0.999],[0.01, 0.999] ]
+# =     Wn      = [ [0.08, 0.999],[0.08, 0.999],[0.08, 0.999],[0.08, 0.999],[0.08, 0.999],[0.08, 0.999]]
+# = ───────────────────────────────────────────────────────────────────────────────────────
+[buy_marker]
+    [buy_marker.S] # * short buy
+        color   = "#FFCB00"  # * gold
+        size    = 20
+        alpha   = 1
+    [buy_marker.L] # * long buy
+        color   = "#C605C0"  # * violet
+        size    = 20
+        alpha   = 1
+    [buy_marker.X] # * crossover buy
+        color   = "#89FE82"  # * light green
+#        color   = "#1FF1E7"
+        size    = 20
+        alpha   = 1
+    [buy_marker.sell]
+        color   = "white" # * light green * https://htmlcolors.com/
+        size    = 20
+        alpha   = 1
+# = ───────────────────────────────────────────────────────────────────────────────────────
+[figtext]
+    color = "olive"
+[styles]
+    # * Plot 0
+    [styles.close]
+        color   = "#FFFFFF" #FFDAB9" # * pink
+        width   = 2
+        alpha   = 0.7
+    [styles.lowerClose]  # * line that moves up and down according to bull/bear
+        color   = "lime"
+        width   = 1
+        alpha   = 1
+    [styles.coverprice]
+        color   = "#00bfFF" # * light-blue,  https://www.w3schools.com/colors/colors_hex.asp
+        width   = 3
+        alpha   = 0.5
+    [styles.buyunder]
+        color   = "#C71585" # * MediumVioletRed
+        width   = 1
+        alpha   = 1
+    [styles.avgprice]
+        color   = "fuchsia"
+        width   = 1
+        alpha   = 1
+    # * Plot 1
+    [styles.Dstot]
+        color   = "orange"
+        width   = 1
+        alpha   = 0.8
+    [styles.Dstot_avg]
+        color   = "white"
+        width   = 1
+        alpha   = 1
+    [styles.Dstot_lo]
+        color   = "cyan"
+        width   = 1
+        alpha   = 0.3
+    [styles.Dstot_hi]
+        color   = "magenta"
+        width   = 1
+        alpha   = 0.3
+    [styles.buyface]
+# =         color   = "red"
+        color   = "#330033"
+    [styles.bullfill]
+        color   = "red"
+        alpha   = 0.3
+    [styles.bearfill]
+        color   = "lime"
+        alpha   = 0.3
+    [styles.bulllow]
+        color   = "magenta"
+        alpha   = 0.3
+    [styles.bearlow]
+        color   = "cyan"
+        alpha   = 0.3
+# = ───────────────────────────────────────────────────────────────────────────────────────

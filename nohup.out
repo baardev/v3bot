@@ -1,0 +1,27 @@
+loading: /home/jw/v2bot_cmd.session
+Listening...
+No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/ext/dispatcher.py", line 555, in process_update
+    handler.handle_update(update, self, check, context)
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/ext/handler.py", line 198, in handle_update
+    return self.callback(update, context)
+  File "/home/jw/store/src/jmcap/v2bot/./tbot_listen.py", line 248, in zxc_command
+    update.message.reply_text(htext)
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/message.py", line 791, in reply_text
+    return self.bot.send_message(
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/bot.py", line 130, in decorator
+    result = func(*args, **kwargs)
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/bot.py", line 522, in send_message
+    return self._message(  # type: ignore[return-value]
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/ext/extbot.py", line 200, in _message
+    result = super()._message(
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/bot.py", line 336, in _message
+    result = self._post(endpoint, data, timeout=timeout, api_kwargs=api_kwargs)
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/bot.py", line 295, in _post
+    return self.request.post(
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/utils/request.py", line 361, in post
+    result = self._request_wrapper(
+  File "/home/jw/.local/lib/python3.10/site-packages/telegram/utils/request.py", line 279, in _request_wrapper
+    raise BadRequest(message)
+telegram.error.BadRequest: Message is too long
